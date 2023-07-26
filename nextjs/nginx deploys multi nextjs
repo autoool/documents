@@ -1,0 +1,29 @@
+```
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    distDir:'dist',
+    basePath: '/dashboard',
+    assetPrefix: '/dashboard/',
+}
+
+module.exports = nextConfig
+
+```
+
+```
+server {
+    #access_log  /user/local/etc/openresty/logs/access.log;
+   # error_log   /user/local/etc/openresty/logs/error.log;
+    listen       80;  #端口号
+    server_name  x.com ww.x.com;
+
+     location / {
+         proxy_pass http://127.0.0.1:3000/;
+     }
+
+    location ^~ /dashboard {
+       proxy_pass http://127.0.0.1:3001/dashboard;
+    }
+
+}
+```
