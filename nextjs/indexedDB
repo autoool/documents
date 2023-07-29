@@ -1,0 +1,211 @@
+添加依赖
+
+```
+       "dexie": "^3.2.4",
+        "dexie-react-hooks": "^1.1.6",
+```
+
+数据库配置
+
+```
+// database.config.ts
+import Dexie from "dexie";
+
+const database = new Dexie("database");
+database.version(1).stores({
+    friends: '++id, name, age'
+});
+
+export const customerTable = database.table('friends');
+
+export default database;
+```
+
+数据库写入
+
+```
+'use client'
+import Image from 'next/image'
+import styles from './page.module.css'
+import Link from 'next/link'
+import { useLiveQuery } from "dexie-react-hooks";
+import db from './database.config';
+import { useState } from 'react';
+
+
+export default function Home() {
+  const [likes, setLikes] = useState(0);
+  const [friends, setFriends] = useState([]);
+  // localStorage.setItem("favoriteNumber",123)
+  // or make a new one
+  async function addItemToDb() {
+
+    await db.friends.add({
+      name: 'Camilla',
+      age: 25,
+      street: 'East 13:th Street'
+    });
+  }
+
+
+
+
+  // const targetUrl='https://github.com/adminmart/Modernize-Nextjs-Free'
+  // const options = { url: targetUrl };
+  // ogs(options)
+  //     .then((data) => {
+  //         const { error, html, result, response } = data;
+  //         console.log('error:', error);  // This returns true or false. True if there was an error. The error itself is inside the result object.
+  //         console.log('html:', html); // This contains the HTML of page
+  //         console.log('result:', result); // This contains all of the Open Graph results
+  //         console.log('response:', response); // This contains response from the Fetch API
+  //     })
+
+  async function logItemToDb() {
+    
+    const friends = await db.friends
+        .where("age")
+        .between(18, 65)
+        .toArray();
+  
+    setFriends(friends);
+  }
+  function handleClick() {
+    setLikes(likes + 1);
+  }
+
+  return (
+    <main className={styles.main}>
+      <div className={styles.description}>
+      <button onClick={handleClick}>Like({likes})</button>
+        <button onClick={addItemToDb}>addFriend</button>
+        <button onClick={logItemToDb}>logFriend</button>
+ 
+        <Link href={'http://hostimgconver.com/jimmy01'}>Dashboard</Link>
+        <a href='http://hostimgconver.com/jimmy01'>YUming</a>
+        <p>
+          Get started by editing&nbsp;
+          <code className={styles.code}>src/app/page.js</code>
+        </p>
+        <div>
+          <a
+            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            By{' '}
+            <Image
+              src="/vercel.svg"
+              alt="Vercel Logo"
+              className={styles.vercelLogo}
+              width={100}
+              height={24}
+              priority
+            />
+          </a>
+        </div>
+      </div>
+
+      <div className={styles.center}>
+        <Image
+          className={styles.logo}
+          src="/next.svg"
+          alt="Next.js Logo"
+          width={180}
+          height={37}
+          priority
+        />
+      </div>
+
+      <div className={styles.grid}>
+        <a
+          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          className={styles.card}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>
+            Docs <span>-&gt;</span>
+          </h2>
+          <p>Find in-depth information about Next.js features and API.</p>
+        </a>
+
+        <a
+          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          className={styles.card}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>
+            Learn <span>-&gt;</span>
+          </h2>
+          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
+        </a>
+
+        <a
+          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          className={styles.card}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>
+            Templates <span>-&gt;</span>
+          </h2>
+          <p>Explore the Next.js 13 playground.</p>
+        </a>
+
+        <a
+          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          className={styles.card}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>
+            Deploy <span>-&gt;</span>
+          </h2>
+          <p>
+            Instantly deploy your Next.js site to a shareable URL with Vercel.
+          </p>
+        </a>
+      </div>
+    </main>
+  )
+}
+
+```
+
+数据库读取
+
+```
+'use client'
+import Image from 'next/image'
+import { useState } from 'react';
+import db from './database.config';
+
+export default function Home() {
+
+  const [friends, setFriends] = useState([]);
+
+  async function logItemToDb() {
+    
+    const friends = await db.friends
+        .where("age")
+        .between(18, 65)
+        .toArray();
+  
+    setFriends(friends);
+  }
+
+
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+          Dashboard
+      </div>
+      <button onClick={logItemToDb}>logFriend</button>
+        {friends.map(friend => <div>{friend.name}</div>)}
+    </main>
+  )
+}
+```
+
