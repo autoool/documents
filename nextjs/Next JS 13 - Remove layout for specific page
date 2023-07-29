@@ -1,0 +1,42 @@
+[Next JS 13 - Remove layout for specific page](https://stackoverflow.com/questions/76230464/next-js-13-remove-layout-for-specific-page)
+
+```
+With Next.js <13, the Root Layout can not be set to a Client Component. This means that a shared layout is not re-rendered during navigation. Therefore, you need to create a layout page, similar to a provider, that can wrap the Root Layout. The layout page has to be client component.
+Create a layout page in your root directory (/app):
+ // Use the client directive for using usePathname hook.
+'use client'
+
+// Use usePathname for catching route name.
+import { usePathname } from 'next/navigation';
+
+export const LayoutProvider = ({ children }) => {
+    const pathname = usePathname();
+    return (
+        <>
+            {pathname === "/posts" && <h1>Welcome to Posts page!</h1>}
+            {children}
+        </>
+    )
+};
+Wrap your Root Layout (/app/layout.js):
+// Import your layout page
+import { LayoutProvider } from './LayoutProvider'
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <LayoutProvider>
+          {children}
+        </LayoutProvider>
+      </body>
+    </html>
+  )
+}
+Further reading:
+
+Roout Layout
+layout.js
+The "use client" directive
+usePathname
+```
