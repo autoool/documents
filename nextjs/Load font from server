@@ -1,0 +1,29 @@
+'use client'
+import React from 'react'
+import '../fontawesome.min.css'
+
+const customFontUrl = '';
+function page() {
+  return (
+    <div>
+      <style jsx>{`
+      @font-face {
+        font-family: 'ItalianNo1';
+        src: url('${customFontUrl}');
+        font-weight: 900;
+        font-style: normal;
+    }
+    
+    .customFont{
+        font-family: 'ItalianNo1';
+    }
+      `}</style>
+      <i className="fa fa-car font-size-48"></i>
+      <i className="fa fa-car" ></i>
+      <i className="fa fa-car" ></i>
+      <p className='customFont'>How we load fonts in our web project can make or break the user’s experience. With system fonts, we are guaranteed that text will render at the earliest possible time. But we may not desire these font types, and more importantly, they are not consistent between operating systems.</p>
+    </div>
+  )
+}
+
+export default page
